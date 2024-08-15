@@ -7,7 +7,7 @@ import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { CommonInputProps, InputBase, isENS } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { AddressSuggestion, useMagicAddressBook } from "~~/hooks/scaffold-eth/useMagicAddressBook";
+import { AddressSuggestion, useMagicAddressBook } from "~~/hooks/ext/useMagicAddressBook";
 
 export const MagicAddressInput = ({
   value,
