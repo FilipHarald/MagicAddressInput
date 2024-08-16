@@ -6,8 +6,8 @@ import { normalize } from "viem/ens";
 import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { CommonInputProps, InputBase, isENS } from "~~/components/scaffold-eth";
+import { AddressSuggestion, getDesc, useMagicAddressBook } from "~~/hooks/ext/useMagicAddressBook";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { AddressSuggestion, useMagicAddressBook } from "~~/hooks/ext/useMagicAddressBook";
 
 export const MagicAddressInput = ({
   value,
@@ -77,7 +77,7 @@ export const MagicAddressInput = ({
 
   useEffect(() => {
     if (isAddress(value)) {
-      addAddress(value as Address, "Auto-added");
+      addAddress(value as Address);
     }
   }, [value, addAddress]);
 
@@ -176,7 +176,7 @@ export const MagicAddressInput = ({
               <span>
                 {suggestion.address.slice(0, 6)}...{suggestion.address.slice(-4)}
               </span>
-              {suggestion.description && <span className="text-gray-500 italic ml-2">{suggestion.description}</span>}
+              {<span className="text-gray-500 italic ml-2">{getDesc(suggestion)}</span>}
               {/* eslint-disable-next-line */}
               <img
                 alt=""
@@ -192,3 +192,4 @@ export const MagicAddressInput = ({
     </div>
   );
 };
+
