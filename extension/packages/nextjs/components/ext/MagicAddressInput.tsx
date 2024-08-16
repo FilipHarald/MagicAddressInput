@@ -166,17 +166,17 @@ export const MagicAddressInput = ({
         }
       />
       {showSuggestions && (
-        <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto top-full left-0 mt-1">
+        <div className="absolute z-10 w-full bg-base-100 border border-base-300 rounded-md shadow-lg max-h-60 overflow-y-auto top-full left-0 mt-1">
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex justify-between items-center"
+              className="cursor-pointer px-4 py-2 hover:bg-base-200 flex justify-between items-center"
               onClick={() => handleSuggestionClick(suggestion)}
             >
               <span>
                 {suggestion.address.slice(0, 6)}...{suggestion.address.slice(-4)}
               </span>
-              {<span className="text-gray-500 italic ml-2">{getDesc(suggestion)}</span>}
+              {<span className="text-gray-400 italic ml-2">{getDesc(suggestion)}</span>}
               {/* eslint-disable-next-line */}
               <img
                 alt=""
