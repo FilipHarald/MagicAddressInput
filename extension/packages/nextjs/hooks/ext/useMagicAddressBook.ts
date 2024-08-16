@@ -22,16 +22,19 @@ const shouldReplaceDescription = (newDesc?: string, oldDesc?: string) => {
 };
 
 export const getDesc = (suggestion: AddressSuggestion) => {
-  let description = suggestion.description || "added";
+  let time = "";
   if (suggestion.timestamp) {
     const diff = (Date.now() - suggestion.timestamp) / 1000;
     if (diff < 60) {
-      description = `${Math.floor(diff)}s ago`;
+      time = `${Math.floor(diff)}s`;
     } else if (diff < 3600) {
-      description = `${Math.floor(diff / 60)}m ago`;
-    } else description = `${Math.floor(diff / 3600)}h ago`;
+      time = `${Math.floor(diff / 60)}m`;
+    } else time = `${Math.floor(diff / 3600)}h`;
   }
-  return description;
+  if (suggestion.description && !suggestion.timestamp) return suggestion.description;
+  if (!suggestion.description && suggestion.timestamp) return `added ${time} ago`;
+  const suffix = time ? `(used ${time} ago)` : "";
+  return `${suggestion.description} ${suffix}`;
 };
 
 type AddressBookStore = {
