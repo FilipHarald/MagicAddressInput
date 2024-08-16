@@ -34,7 +34,7 @@ export const useMagicAddressBook = () => {
 
   const addAddress = (address: Address, description?: string) => {
     setSuggestions(prev => {
-      if (prev.find(suggestion => suggestion.address === address)) {
+      if (prev.find(suggestion => suggestion.address === address && suggestion.description === description)) {
         return prev;
       }
       return [
