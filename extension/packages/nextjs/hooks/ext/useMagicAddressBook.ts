@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Address } from "viem";
 import { useAccount } from "wagmi";
+import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
 export type AddressSuggestion = {
   address: Address;
@@ -16,7 +17,7 @@ const DEFAULT_SUGGESTIONS_PRIORITIZED = [CONNNECTED_WALLET, PREV_CONNECTED_WALLE
 const shouldReplaceDescription = (newDesc?: string, oldDesc?: string) => {
   // NOTE: undefined is the lowest priority and custom descriptions are always prioritized (returning -1)
   return DEFAULT_SUGGESTIONS_PRIORITIZED.indexOf(newDesc) < DEFAULT_SUGGESTIONS_PRIORITIZED.indexOf(oldDesc);
-}
+};
 
 export const getDesc = (suggestion: AddressSuggestion) => {
   if (!suggestion.description && suggestion.timestamp) {
@@ -36,18 +37,37 @@ export const getDesc = (suggestion: AddressSuggestion) => {
 export const useMagicAddressBook = () => {
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const { address: connectedAddress } = useAccount();
+  const deployedContracts = useMemo(() => getAllContracts(), []);
+  const addedContractsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (deployedContracts) {
+      const newSuggestions = Object.entries(deployedContracts)
+        .filter(([, contract]) => !addedContractsRef.current.has(contract.address))
+        .map(([contractName, contract]) => ({
+          address: contract.address,
+          description: contractName,
+        }));
+
+      if (newSuggestions.length > 0) {
+        setSuggestions(prev => [...prev, ...newSuggestions]);
+        newSuggestions.forEach(suggestion => addedContractsRef.current.add(suggestion.address));
+      }
+    }
+  }, [deployedContracts]);
 
   useEffect(() => {
     if (connectedAddress) {
       setSuggestions(prev => {
+        const updatedSuggestions = prev
+          .filter(suggestion => suggestion.address !== connectedAddress)
+          .map(suggestion => ({
+            ...suggestion,
+            description: suggestion.description === CONNNECTED_WALLET ? PREV_CONNECTED_WALLET : suggestion.description,
+          }));
+
         return [
-          ...prev
-            .filter(suggestion => suggestion.address !== connectedAddress)
-            .map(suggestion => ({
-              ...suggestion,
-              description:
-                suggestion.description === CONNNECTED_WALLET ? PREV_CONNECTED_WALLET : suggestion.description,
-            })),
+          ...updatedSuggestions,
           {
             address: connectedAddress,
             description: CONNNECTED_WALLET,
@@ -57,14 +77,11 @@ export const useMagicAddressBook = () => {
     }
   }, [connectedAddress]);
 
-  const addAddress = (address: Address, description?: string) => {
+  const addAddress = useCallback((address: Address, description?: string) => {
     console.log("addAddress", address, description);
     setSuggestions(prev => {
       const existingSuggestion = prev.find(suggestion => suggestion.address === address);
-      if (
-        existingSuggestion &&
-        !shouldReplaceDescription(description, existingSuggestion.description)
-      ) {
+      if (existingSuggestion && !shouldReplaceDescription(description, existingSuggestion.description)) {
         return prev;
       }
       return [
@@ -76,7 +93,7 @@ export const useMagicAddressBook = () => {
         },
       ];
     });
-  };
+  }, []);
 
   return {
     suggestions,
