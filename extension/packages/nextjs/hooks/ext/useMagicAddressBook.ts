@@ -10,6 +10,8 @@ export type AddressSuggestion = {
   timestamp?: number;
 };
 
+// TODO: allow for custom address book during init
+
 const CONNNECTED_WALLET = "Connected wallet";
 const PREV_CONNECTED_WALLET = "Prev. connected wallet";
 const NO_DESCRIPTION = undefined;
@@ -21,6 +23,7 @@ const shouldReplaceDescription = (newDesc?: string, oldDesc?: string) => {
   return DEFAULT_SUGGESTIONS_PRIORITIZED.indexOf(newDesc) < DEFAULT_SUGGESTIONS_PRIORITIZED.indexOf(oldDesc);
 };
 
+const getDefaultDescription = (time: string) => `added ${time} ago`;
 export const getDesc = (suggestion: AddressSuggestion) => {
   let time = "";
   if (suggestion.timestamp) {
@@ -32,7 +35,8 @@ export const getDesc = (suggestion: AddressSuggestion) => {
     } else time = `${Math.floor(diff / 3600)}h`;
   }
   if (suggestion.description && !suggestion.timestamp) return suggestion.description;
-  if (!suggestion.description && suggestion.timestamp) return `added ${time} ago`;
+  if ((!suggestion.description || suggestion.description === "") && suggestion.timestamp)
+    return getDefaultDescription(time);
   const suffix = time ? `(used ${time} ago)` : "";
   return `${suggestion.description} ${suffix}`;
 };
@@ -123,4 +127,3 @@ export const useMagicAddressBook = () => {
     addAddress: addSuggestion,
   };
 }; // TODO: extend above functionality to only give partial address book (depending on input-id)
-
