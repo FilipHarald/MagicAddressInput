@@ -19,8 +19,12 @@ const MagicAddressInputDemo: NextPage = () => {
           Below you will find a MagicAddressInput component and an example of how you can manually add addresses to it.
         </p>
         <p className="text-center text-lg">
-          In the <code className="italic bg-base-300 text-base font-bold [word-spacing:-0.5rem] px-1">README.md</code>{" "}
-          you will find a small explanation of how to use it or replace existing components.
+          You can also refer to the{" "}
+          <a href="https://github.com/FilipHarald/MagicAddressInput/blob/master/README.md" className="underline">
+            project README
+          </a>{" "}
+          for an explanation of how to use it or replace existing{" "}
+          <code className="italic bg-base-300 text-base font-bold px-1">AddressInput</code>
         </p>
         <p className="text-center text-lg">
           This page is located in{" "}
