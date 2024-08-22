@@ -26,11 +26,17 @@ export const Demo = ({ address: adr }: { address: Address }) => {
     <>
       <div className="text-center mt-8 bg-base-100 p-20 m-5">
         <h1 className="text-4xl">1. MagicAddressInput Component</h1>
-        <p className="text-center text-lg">
-          Try typing in a valid address or ENS name. The component will automatically add it to the address book.
-        </p>
-        <div className="flex items-center space-y-4 flex-col">
+        <div className="flex items-center space-y-2 flex-col">
+          <p className="text-center text-lg">
+            Try typing in a valid address or ENS name. The component will automatically add it to the address book.
+          </p>
           <MagicAddressInput {...inputProps} />
+
+          <p className="text-center text-lg">
+            You can also hide the address text by setting the{" "}
+            <code className="italic bg-base-300 text-base font-bold px-1">hideAddressText</code> prop to true.
+          </p>
+          <MagicAddressInput {...inputProps} hideAddressText />
         </div>
       </div>
 

@@ -15,7 +15,8 @@ export const MagicAddressInput = ({
   placeholder,
   onChange,
   disabled,
-}: CommonInputProps<Address | string>) => {
+  hideAddressText,
+}: CommonInputProps<Address | string> & { hideAddressText?: boolean }) => {
   const { addAddress, suggestions } = useMagicAddressBook();
   // Debounce the input to keep clean RPC calls when resolving ENS names
   // If the input is an address, we don't need to debounce it
@@ -173,9 +174,11 @@ export const MagicAddressInput = ({
               className="cursor-pointer hover:bg-base-200 flex justify-between items-center"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              <span>
-                {suggestion.address.slice(0, 5)}...{suggestion.address.slice(-3)}
-              </span>
+              {hideAddressText ? null : (
+                <span>
+                  {suggestion.address.slice(0, 5)}...{suggestion.address.slice(-3)}
+                </span>
+              )}
               {<span className="text-gray-400 italic truncate">{getDesc(suggestion)}</span>}
               {/* eslint-disable-next-line */}
               <img
